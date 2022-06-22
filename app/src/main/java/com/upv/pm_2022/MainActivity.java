@@ -2,15 +2,32 @@ package com.upv.pm_2022;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.File;
+import java.io.FileWriter;
 
+import jp.wasabeef.richeditor.RichEditor;
+
+/**
+ * Rich Text to Latex app
+ * <p>
+ * Based on 2020 Wasabeef
+ * <p>
+ * Modified by Eduardo Uriegas in June 2022 to support Latex parsing
+ */
 public class MainActivity extends AppCompatActivity {
 
     private RichEditor mEditor; // Rich Text editor
     private TextView mPreview;  // Variable to display the Latex to
+    private Button exportBtn;
+    private final String OUTPUT = "output.html";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,5 +100,23 @@ public class MainActivity extends AppCompatActivity {
             mEditor.insertLink("https://github.com/", "Github");
         });
         findViewById(R.id.action_insert_checkbox).setOnClickListener(view->{mEditor.insertTodo();});
+
+        exportBtn = findViewById(R.id.export);
+        exportBtn.setOnClickListener(view -> {
+            File file = new File(Environment.getExternalStorageDirectory().toString() + '/'
+                    + OUTPUT);
+            try{
+                file.delete();
+                file.createNewFile();
+                FileWriter out = new FileWriter(Environment.getExternalStorageDirectory()
+                        .toString() + '/' + OUTPUT);
+                out.append(mPreview.getText().toString()); out.flush(); out.close();
+                Toast.makeText(getBaseContext(), "DB exported into root folder",
+                        Toast.LENGTH_LONG).show();
+            } catch ( Exception e ) { // Catch IO or SQL exception
+                Toast.makeText(getBaseContext(), "An error occurred", Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+            }
+        });
     }
 }
