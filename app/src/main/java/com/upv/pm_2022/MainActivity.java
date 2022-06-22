@@ -4,14 +4,13 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-import jp.wasabeef.richeditor.*;
 import androidx.appcompat.app.AppCompatActivity;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    private RichEditor mEditor;
-    private TextView mPreview;
+    private RichEditor mEditor; // Rich Text editor
+    private TextView mPreview;  // Variable to display the Latex to
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,19 +18,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mEditor = findViewById(R.id.editor);
         mEditor.setEditorHeight(200);
-        mEditor.setEditorFontSize(22);
+        mEditor.setEditorFontSize(24);
         mEditor.setEditorFontColor(Color.BLACK);
         mEditor.setPadding(10, 10, 10, 10);
         mEditor.setPlaceholder("Insert text here...");
 
         mPreview = findViewById(R.id.preview);
-        mEditor.setOnTextChangeListener(text-> {mPreview.setText(text);});
-//        mEditor.setOnTextChangeListener(new RichEditor.OnTextChangeListener() {
-//            @Override
-//            public void onTextChange(String text) {
-//                mPreview.setText(text);
-//            }
-//        });
+        mEditor.setOnTextChangeListener(text -> {mPreview.setText(text);});
 
         findViewById(R.id.action_undo).setOnClickListener(view->{mEditor.undo();});
         findViewById(R.id.action_redo).setOnClickListener(view->{mEditor.redo();});
