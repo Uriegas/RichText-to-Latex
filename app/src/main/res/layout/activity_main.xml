@@ -46,6 +46,7 @@
                 android:contentDescription="@null"
                 android:src="@drawable/italic" />
 
+<!--            Not supported in version 1-->
 <!--            <ImageButton-->
 <!--                android:id="@+id/action_subscript"-->
 <!--                android:layout_width="48dp"-->
@@ -102,29 +103,30 @@
                 android:contentDescription="@null"
                 android:src="@drawable/h3" />
 
-            <ImageButton
-                android:id="@+id/action_heading4"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@null"
-                android:contentDescription="@null"
-                android:src="@drawable/h4" />
+<!--            Not supported by Latex-->
+<!--            <ImageButton-->
+<!--                android:id="@+id/action_heading4"-->
+<!--                android:layout_width="48dp"-->
+<!--                android:layout_height="48dp"-->
+<!--                android:background="@null"-->
+<!--                android:contentDescription="@null"-->
+<!--                android:src="@drawable/h4" />-->
 
-            <ImageButton
-                android:id="@+id/action_heading5"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@null"
-                android:contentDescription="@null"
-                android:src="@drawable/h5" />
+<!--            <ImageButton-->
+<!--                android:id="@+id/action_heading5"-->
+<!--                android:layout_width="48dp"-->
+<!--                android:layout_height="48dp"-->
+<!--                android:background="@null"-->
+<!--                android:contentDescription="@null"-->
+<!--                android:src="@drawable/h5" />-->
 
-            <ImageButton
-                android:id="@+id/action_heading6"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@null"
-                android:contentDescription="@null"
-                android:src="@drawable/h6" />
+<!--            <ImageButton-->
+<!--                android:id="@+id/action_heading6"-->
+<!--                android:layout_width="48dp"-->
+<!--                android:layout_height="48dp"-->
+<!--                android:background="@null"-->
+<!--                android:contentDescription="@null"-->
+<!--                android:src="@drawable/h6" />-->
 
             <ImageButton
                 android:id="@+id/action_txt_color"
@@ -207,46 +209,46 @@
                 android:contentDescription="@null"
                 android:src="@drawable/blockquote" />
 
-            <ImageButton
-                android:id="@+id/action_insert_image"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@null"
-                android:contentDescription="@null"
-                android:src="@drawable/insert_image" />
+<!--            Not Supported in Version 1-->
+<!--            <ImageButton-->
+<!--                android:id="@+id/action_insert_image"-->
+<!--                android:layout_width="48dp"-->
+<!--                android:layout_height="48dp"-->
+<!--                android:background="@null"-->
+<!--                android:contentDescription="@null"-->
+<!--                android:src="@drawable/insert_image" />-->
 
-            <ImageButton
-                android:id="@+id/action_insert_link"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@null"
-                android:contentDescription="@null"
-                android:src="@drawable/insert_link" />
+<!--            <ImageButton-->
+<!--                android:id="@+id/action_insert_link"-->
+<!--                android:layout_width="48dp"-->
+<!--                android:layout_height="48dp"-->
+<!--                android:background="@null"-->
+<!--                android:contentDescription="@null"-->
+<!--                android:src="@drawable/insert_link" />-->
 
         </LinearLayout>
     </HorizontalScrollView>
 
-<!--    <com.upv.pm_2022.RichEditor-->
     <jp.wasabeef.richeditor.RichEditor
         android:id="@+id/editor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/center"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:gravity="center_horizontal"
-        android:text="Latex Output"
-        android:textColor="@color/black"
-        android:textSize="14sp" />
+<!--    <TextView-->
+<!--        android:id="@+id/center"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="20dp"-->
+<!--        android:gravity="center_horizontal"-->
+<!--        android:text="Latex Output"-->
+<!--        android:textColor="@color/black"-->
+<!--        android:textSize="14sp" />-->
 
-    <TextView
-        android:id="@+id/preview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp" />
+<!--    <TextView-->
+<!--        android:id="@+id/preview"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="15dp" />-->
 
     <LinearLayout
         android:layout_width="wrap_content"
