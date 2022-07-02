@@ -17,10 +17,10 @@ public class HTMLParserUnitTest {
         String expected="\\documentclass{article}\\usepackage{xcolor, soul}\\begin{document}H" +
                         "ola \\textbf{como }estan\\underline{?\\newline\\st{No se\\newlin" +
                         "e\\newline}}\\section{Titulo 1}\\subsection{Subtitulo}\\subsubsec" +
-                        "tion{Subsubtitulo}\\begin{group}{\\color{red} a}\\end{group}\\" +
-                        "begin{group}\\newline\\end{group}\\begin{enumerate}\\item qw \\it" +
-                        "em 123 \\end{enumerate}\\begin{group}\\begin{itemize}\\item qwdqw" +
-                        " \\item qwdqw \\end{itemize}\\end{group}\\end{document}";
+                        "tion{Subsubtitulo}{\\color{black} {\\color{red} a}}{\\" +
+                        "color{black} \\newline}\\begin{enumerate}\\item qw \\it" +
+                        "em 123 \\end{enumerate}{\\color{black} \\begin{itemize}\\item qwdqw" +
+                        " \\item qwdqw \\end{itemize}}\\end{document}";
         String actual = HTMLParser.toLatex(input);
         assertEquals(expected, actual);
     }

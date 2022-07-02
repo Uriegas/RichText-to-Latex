@@ -34,8 +34,10 @@ public class HTMLParser {
         regex.put(" ",                      Pattern.compile("</li>"));
         regex.put("\\\\begin{quote}",       Pattern.compile("<quote>"));
         regex.put("\\\\end{quote}",         Pattern.compile("</quote>"));
-        regex.put("\\\\begin{group}",       Pattern.compile("<div>"));
-        regex.put("\\\\end{group}",         Pattern.compile("</div>"));
+        // NOTE: Quick fix for divs since group requires a dependency:
+        // \begin{group} -> {\color{black}
+        regex.put("{\\\\color{black} ",     Pattern.compile("<div>"));
+//        regex.put("\\\\end{group}",         Pattern.compile("</div>"));
         regex.put("\\\\newline",            Pattern.compile("<br>"));
         regex.put("}",                      Pattern.compile("</.*?>"));
     }

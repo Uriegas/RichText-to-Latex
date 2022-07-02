@@ -1,18 +1,19 @@
 package com.upv.pm_2022;
 
+import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -30,7 +31,6 @@ import jp.wasabeef.richeditor.RichEditor;
 public class MainActivity extends AppCompatActivity {
 
     private RichEditor mEditor; // Rich Text editor
-//    private TextView mPreview;  // Variable to display the Latex to
     private Button exportBtn;
     private final String OUTPUT = "latex_file";
 
@@ -45,23 +45,15 @@ public class MainActivity extends AppCompatActivity {
         mEditor.setPadding(10, 10, 10, 10);
         mEditor.setPlaceholder("Insert text here...");
 
-//        mPreview = findViewById(R.id.preview);
-//        mEditor.setOnTextChangeListener(text -> {mPreview.setText(text);});
-
         findViewById(R.id.action_undo).setOnClickListener(view->{mEditor.undo();});
         findViewById(R.id.action_redo).setOnClickListener(view->{mEditor.redo();});
         findViewById(R.id.action_bold).setOnClickListener(view->{mEditor.setBold();});
         findViewById(R.id.action_italic).setOnClickListener(view->{mEditor.setItalic();});
-//        findViewById(R.id.action_subscript).setOnClickListener(view->{mEditor.setSubscript();});
-//        findViewById(R.id.action_superscript).setOnClickListener(view->{mEditor.setSuperscript();});
         findViewById(R.id.action_strikethr).setOnClickListener(view->{mEditor.setStrikeThrough();});
         findViewById(R.id.action_underline).setOnClickListener(view->{mEditor.setUnderline();});
         findViewById(R.id.action_heading1).setOnClickListener(view->{mEditor.setHeading(1);});
         findViewById(R.id.action_heading2).setOnClickListener(view->{mEditor.setHeading(2);});
         findViewById(R.id.action_heading3).setOnClickListener(view->{mEditor.setHeading(3);});
-//        findViewById(R.id.action_heading4).setOnClickListener(view->{mEditor.setHeading(4);});
-//        findViewById(R.id.action_heading5).setOnClickListener(view->{mEditor.setHeading(5);});
-//        findViewById(R.id.action_heading6).setOnClickListener(view->{mEditor.setHeading(6);});
         findViewById(R.id.action_txt_color).setOnClickListener(new View.OnClickListener() {
             private boolean isChanged;
             @Override
@@ -70,20 +62,6 @@ public class MainActivity extends AppCompatActivity {
                 isChanged = !isChanged;
             }
         });
-//        findViewById(R.id.action_bg_color).setOnClickListener(new View.OnClickListener() {
-//            BUG: Transparent background not working, displays black Pixel 2 API 3
-//            private boolean isChanged;
-//            @Override
-//            public void onClick(View v) {
-//                mEditor.setTextBackgroundColor(isChanged ? Color.TRANSPARENT : Color.YELLOW);
-//                isChanged = !isChanged;
-//            }
-//        });
-//        findViewById(R.id.action_indent).setOnClickListener(view->{mEditor.setIndent();});
-//        findViewById(R.id.action_outdent).setOnClickListener(view->{mEditor.setOutdent();});
-//        findViewById(R.id.action_align_left).setOnClickListener(view->{mEditor.setAlignLeft();});
-//        findViewById(R.id.action_align_center).setOnClickListener(view->{mEditor.setAlignCenter();});
-//        findViewById(R.id.action_align_right).setOnClickListener(view->{mEditor.setAlignRight();});
         findViewById(R.id.action_insert_bullets).setOnClickListener(view->{mEditor.setBullets();});
         findViewById(R.id.action_insert_numbers).setOnClickListener(view->{mEditor.setNumbers();});
         // TODO: Cannot dequote
@@ -97,14 +75,13 @@ public class MainActivity extends AppCompatActivity {
                 file.delete(); file.createNewFile();
                 FileWriter out = new FileWriter(Environment.getExternalStorageDirectory()
                         .toString() + '/' + OUTPUT + ".tex");
-                // Execute HTML2Latex parsing
-                out.append(HTMLParser.toLatex(mEditor.getHtml()));
-                System.out.println(Environment.getExternalStorageDirectory().toString()+'/'+OUTPUT);
-//                out.append(HTMLParser.toLatex(mPreview.getText().toString()));
-                out.flush();out.close();
+                // Generate .tex and .pdf files and show the latest
+                String tex_string = HTMLParser.toLatex(mEditor.getHtml());
+                out.append(tex_string); out.flush(); out.close();
                 Toast.makeText(getBaseContext(), "Tex file exported into root folder",
                         Toast.LENGTH_LONG).show();
-                // TODO: Execute termux command and create intent to launch pdf.
+                // TODO: Execute termux command
+                //texlive();
                 open_file(OUTPUT + ".pdf");
             } catch ( HTMLParser.HTML2LatexException e ) {
                 Toast.makeText(getBaseContext(), e.toString(), Toast.LENGTH_SHORT).show();
@@ -146,5 +123,43 @@ public class MainActivity extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+    }
+
+    /**
+     * Executes pdflatex command and generates .pdf file in main storage
+     */
+    public void texlive() {
+        Intent intent = new Intent();
+        intent.setClassName("com.termux", "com.termux.app.RunCommandService");
+        intent.setAction("com.termux.RUN_COMMAND");
+        intent.putExtra("com.termux.RUN_COMMAND_PATH", "/data/data/com.termux/files/" +
+                        "usr/bin/texlive/xelatex");
+        intent.putExtra("RUN_COMMAND_SERVICE.EXTRA_WORKDIR", "/storage/emulated/0");
+        intent.putExtra("com.termux.RUN_COMMAND_ARGUMENTS",
+                        new String[]{
+                                     "-interaction", "nonstopmode", "-halt-on-error",
+                                     "-file-line-error",
+                                     OUTPUT + ".tex"}
+                        );
+        intent.putExtra("com.termux.RUN_COMMAND_BACKGROUND", true);
+        intent.putExtra("RUN_COMMAND_SERVICE.EXTRA_SESSION_ACTION", "0");
+        intent.putExtra("RUN_COMMAND_SERVICE.EXTRA_COMMAND_LABEL", "Texlive command");
+        Intent pluginResultsServiceIntent = new Intent(MainActivity.this,
+                                                        PluginResultsService.class);
+        int executionId = PluginResultsService.getNextExecutionId();
+        pluginResultsServiceIntent.putExtra(PluginResultsService.EXTRA_EXECUTION_ID, executionId);
+        PendingIntent pendingIntent = PendingIntent.getService(MainActivity.this,
+                        executionId, pluginResultsServiceIntent, PendingIntent.FLAG_MUTABLE);
+        intent.putExtra("RUN_COMMAND_SERVICE.EXTRA_PENDING_INTENT", pendingIntent);
+
+        try{
+            Log.d("Termux Call", "Sending execution command with id " + executionId);
+            startService(intent);
+        } catch (Exception e) {
+            Log.e("Termux Call", "Failed to start execution command with id " +
+                    executionId + ": " + e.getMessage());
+            Log.e("Termux", "Failed to execute command ");
+        }
+
     }
 }
